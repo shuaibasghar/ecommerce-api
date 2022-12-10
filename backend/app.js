@@ -7,5 +7,6 @@ app.use(express.json());
 const product = require("./routes/productRoutes");
 
 app.use("/api/v1", product);
+// app.use("/", product);
 
 module.exports = app;
