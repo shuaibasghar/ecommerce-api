@@ -8,11 +8,9 @@ const connnectDatabase = () => {
             // useCreateIndex: true,
         })
         .then((data) => {
-            console
-                .log(`MongoDb connected with server:${data.connection.host}`)
-                .catch((error) => {
-                    console.log("mongodb initial connection error", error);
-                });
+            console.log(
+                `MongoDb connected with server:${data.connection.host}`
+            );
         });
 };
 
