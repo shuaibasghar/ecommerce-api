@@ -63,4 +63,9 @@ userSchema.methods.getJWTToken = function () {
     }); //this._id means userSchema ke ander jo _id hai  // creating token --payload
 };
 
+//Compare password which we will use in login function in userController
+userSchema.methods.comparePassword = async function (enteredPassword) {
+    return await bcrypt.compare(enteredPassword, this.password);
+};
+
 module.exports = mongoose.model("User", userSchema);
