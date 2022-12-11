@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
-const bcryptjs = require("bcrypt");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -43,5 +44,23 @@ const userSchema = new mongoose.Schema({
     resetPasswordToken: String,
     resetPasswordExpire: Date,
 });
+
+//this is like an save event when user schema is save password will also also be encrypted
+userSchema.pre("save", async function (next) {
+    //this if condition will be use when password is changed if password is change then this will make password encrypted that new password
+    if (!this.isModified("password")) {
+        //this.--means userShema in userSchema it will check password field is changed
+        next();
+    }
+
+    this.password = await bcrypt.hash(this.password, 10); //this 10 number shows that how much powerful will be your password you can also use 12 it will be more powerful than 10 but 10 is recommended
+});
+
+//JWT TOKEN ---we will generate a token and store it in cookies
+userSchema.methods.getJWTToken = function () {
+    return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRE,
+    }); //this._id means userSchema ke ander jo _id hai  // creating token --payload
+};
 
 module.exports = mongoose.model("User", userSchema);
